@@ -3,6 +3,10 @@
 #include <linux/module.h>
 
 #include <asm/io.h>
+#include <mach/gpio.h>
+#include <plat/gpio-cfg.h>
+#include <linux/platform_device.h>
+#include <mach/regs-gpio.h>
 
 //#define LED_MA 200
 //#define LED_MI 1
