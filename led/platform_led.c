@@ -9,7 +9,7 @@
 #include <mach/regs-gpio.h>
 
 //#define LED_MA 200
-//#define LED_MI 1
+#define LED_MI 1
 #define DEV_NAME "fr_led"
 
 #define LED_MAGIC 0x66
