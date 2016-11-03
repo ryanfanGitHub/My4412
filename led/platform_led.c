@@ -1,22 +1,25 @@
 #include <linux/kernel.h>
 #include <linux/fs.h>
 #include <linux/module.h>
+#include <linux/init.h>
 
 #include <asm/io.h>
 #include <mach/gpio.h>
 #include <plat/gpio-cfg.h>
 #include <linux/platform_device.h>
 #include <mach/regs-gpio.h>
+#include <linux/miscdevice.h>
+#include <linux/regulator/consumer.h>
+#include <linux/delay.h>
 
 
-#define DEV_NAME "fr_led"
+#define DEV_NAME "frled"
 
 #define LED_MAGIC 0x66
 #define LED_ON  _IOW(LED_MAGIC, 0, int)
 #define LED_OFF _IOW(LED_MAGIC, 1, int)
 
 #define LED1 EXYNOS4_GPL2(0)
-//testtttttt
 
 static int led_open(struct inode *inode, struct file *filp)
 {
@@ -54,7 +57,7 @@ static struct file_operations led_fops ={
 
 static struct miscdevice miscled = {
 	.minor = MISC_DYNAMIC_MINOR,
-	.name = DEV_NAME,
+	.name = "frled",
 	.fops = &led_fops,
 };
 
@@ -68,7 +71,7 @@ static int led_gpioinit(void)
 	
 	ret = gpio_request(LED1,DEV_NAME);
 	if(ret){
-		printk("request gpio failed\n")
+		printk("request gpio failed\n");
 		return ret;
 	}
 	s3c_gpio_cfgpin(LED1,S3C_GPIO_OUTPUT);
@@ -80,7 +83,7 @@ static int led_gpioinit(void)
 static int led_probe(struct platform_device *pdev)
 {
 	int ret;
-
+	printk("led initttttttttttttt\n");
 	led_gpioinit();
 	ret = misc_register(&miscled);
 	if(ret != 0){
@@ -93,7 +96,8 @@ static int led_probe(struct platform_device *pdev)
 
 static int led_remove(struct platform_device *pdev)
 {
-
+	misc_deregister(&miscled); 
+	return 0;
 }
 
 static int led_suspend(struct platform_device *pdev)
@@ -107,10 +111,10 @@ static struct platform_driver led_driver = {
 	.remove = led_remove,
 	.suspend = led_suspend,
 	.driver = {
-		.name = DEV_NAME,
+		.name = "frled",
 		.owner = THIS_MODULE,
 	},
-}
+};
 static void __init led_init(void)
 {
 	platform_driver_unregister(&led_driver);
@@ -118,7 +122,7 @@ static void __init led_init(void)
 
 static void __exit led_exit(void)
 {
-	return platform_driver_register(&led_driver);
+	platform_driver_register(&led_driver);
 }
 
 module_init(led_init);
