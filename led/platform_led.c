@@ -17,15 +17,6 @@
 
 #define LED1 EXYNOS4_GPL2(0)
 
-/*
-typedef struct{
-	struct cdev cdev;
-	int lednum;
-	char *buf;
-}LedCdev;
-
-LedCdev ledcdev;
-*/
 
 
 static int led_open(struct inode *inode, struct file *filp)
