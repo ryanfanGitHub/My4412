@@ -1,0 +1,65 @@
+diff a/led/platform_led.c b/led/platform_led.c	(rejected hunks)
+@@ -1,62 +1,61 @@
+ #include <linux/kernel.h>
+ #include <linux/fs.h>
+ #include <linux/module.h>
+ 
+ #include <asm/io.h>
+ #include <mach/gpio.h>
+ #include <plat/gpio-cfg.h>
+ #include <linux/platform_device.h>
+ #include <mach/regs-gpio.h>
+ 
+-//#define LED_MA 200
+-#define LED_MI 1
++
+ #define DEV_NAME "fr_led"
+ 
+ #define LED_MAGIC 0x66
+ #define LED_ON  _IOW(LED_MAGIC, 0, int)
+ #define LED_OFF _IOW(LED_MAGIC, 1, int)
+ 
+ #define LED1 EXYNOS4_GPL2(0)
+ 
+ /*
+ typedef struct{
+ 	struct cdev cdev;
+ 	int lednum;
+ 	char *buf;
+ }LedCdev;
+ 
+ LedCdev ledcdev;
+ */
+ 
+ 
+ static int led_open(struct inode *inode, struct file *filp)
+ {
+ 	return 0;
+ }
+ 
+ static int led_release(struct inode *inode, struct file *filp)
+ {
+ 	return 0;
+ }
+ 
+ static long led_unlocked_ioctl(struct file *filp, unsigned int cmd,unsigned long arg)
+ {
+ 	switch(cmd){
+ 		case LED_ON:
+ 			gpio_set_value(LED1, 1);
+ 			break;
+ 		case LED_OFF:
+ 			gpio_set_value(LED1, 0);
+ 			break;
+ 		default:
+ 			printk("Wrong cmd\n");
+ 			return -EINVAL;
+ 
+ 	}
+ 	return 0;
+ }
+ 
+ static struct file_operations led_fops ={
+ 	.owner = THIS_MODULE,
+ 	.open = led_open,
+ 	.release = led_release,
