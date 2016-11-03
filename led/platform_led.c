@@ -16,12 +16,7 @@
 #define LED_OFF _IOW(LED_MAGIC, 1, int)
 
 #define LED1 EXYNOS4_GPL2(0)
-
-<<<<<<< HEAD
 //testtttttt
-=======
-
->>>>>>> 1e1a5d83387043a1045451324f453c6885c05901
 
 static int led_open(struct inode *inode, struct file *filp)
 {
