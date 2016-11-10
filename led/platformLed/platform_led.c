@@ -117,12 +117,12 @@ static struct platform_driver led_driver = {
 };
 static void __init led_init(void)
 {
-	platform_driver_unregister(&led_driver);
+	platform_driver_register(&led_driver);
 }
 
 static void __exit led_exit(void)
 {
-	platform_driver_register(&led_driver);
+	platform_driver_unregister(&led_driver);
 }
 
 module_init(led_init);
