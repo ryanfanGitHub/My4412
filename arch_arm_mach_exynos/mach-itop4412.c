@@ -2832,6 +2832,10 @@ static struct platform_device *smdk4x12_devices[] __initdata = {
 	&s3c_device_max485_ctl ,
 #endif
 
+#ifdef CONFIG_RYANFAN_LED
+	&s3c_device_ryanfan_led,
+#endif
+
 #ifdef CONFIG_LEDS_CTL
 	&s3c_device_leds_ctl,
 #endif
