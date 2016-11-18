@@ -32,6 +32,7 @@ int System_Log_Init(void)
 		if( (log_childPid = fork()) == 0 ){ //chid proc 
 			close(pFds[1]);
 			para->pipe_rdFd = pFds[0]; //
+			Log_Process_Loop();
 		}else if(log_childPid > 0){ // father proc
 			close(1);
 			if(dup2(pFds[1], 1) < 0){
@@ -45,4 +46,58 @@ int System_Log_Init(void)
 		printf("log fork failed %s\n",sterror(errno));
 		return -1;
 	}
+}
+
+void Log_Process_Loop(LOG_PARAM_THREAD *para)
+{
+	int ret,tmp;
+	int fd = -1;
+	char file_name[32];
+	int offset = 0;
+	char *buf;
+	time_t timer;
+	struct tm *time_tmp;
+	if( (buf = (char *)malloc(BUF_SIZE)) == NULL ){
+		printf("malloc log buffer failed: %s\n",sterror(errno));
+		return;
+	}
+	
+	while(1){
+		switch LOG_LOOP_CTL{
+			case LOG_CTL_INIT:
+				timer = time(NULL);
+				time_tmp = localtime(&timer);
+				sprintf(file_name, "%4d_%02d_%02d_%02d_%02d_%02d"".log", \
+						time_tmp->tm_year+1900, time_tmp->tm_mon+1, time_tmp->tm_mday, \
+						time_tmp->tm_hour, time_tmp->tm_min, time_tmp->tm_sec);
+				fd = open(file_name, O_RDWR | O_CREAT, 0644);
+				if(fd <0){
+					printf("open log file failed: %s\n",sterror(errno));
+					goto exit_;
+				}
+				LOG_LOOP_CTL = LOG_CTL_ING;
+				break;
+				
+			case LOG_CTL_ING:
+				
+				break;
+				
+			case LOG_CTL_FAULT:
+				
+				break;
+				
+			default:
+				printf("log loop ctl error\n");
+	
+		}
+	}
+	
+exit1_:
+	close(fd);
+
+exit_:
+	free(buf);
+	close(para->pipe_rdFd);
+	return;
+	
 }

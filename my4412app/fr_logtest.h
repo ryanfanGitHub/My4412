@@ -6,3 +6,9 @@ typedef struct log_param{
 	int pipe_wtFd;
 	int pipe_rdFd;
 }LOG_PARAM_THREAD;
+
+enum log_loop_ctl { 
+	LOG_CTL_INIT = 0,
+	LOG_CTL_ING,
+	LOG_CTL_FAULT
+} LOG_LOOP_CTL;
